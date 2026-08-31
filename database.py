@@ -9,8 +9,9 @@ from pathlib import Path
 # --------------------------------------------------
 
 INPUT_FILE = Path(
-    "output/cms_clfs_combined.csv"
+    "output/cms_all_combined.csv"
 )
+
 
 DATABASE_FILE = Path(
     "cms_clfs.db"

@@ -1,4 +1,3 @@
-
 import subprocess
 import sys
 
@@ -35,13 +34,19 @@ def main():
     # Step 1 - Download and extract CMS files
     run_script("download_files.py")
 
-    # Step 2 - Transform and combine CSV files
+    # Step 2 - Process Clinical data
     run_script("etl_pipeline.py")
 
-    # Step 3 - Load cleaned data into SQLite
+    # Step 3 - Process Physician data
+    run_script("physician_parser.py")
+
+    # Step 4 - Combine Clinical + Physician data
+    run_script("combine_datasets.py")
+
+    # Step 5 - Load combined data into SQLite
     run_script("database.py")
 
-    # Step 4 - Run SQL analysis
+    # Step 6 - Run SQL analysis
     run_script("sql_queries.py")
 
     print()
@@ -52,9 +57,10 @@ def main():
     print()
     print("Generated outputs:")
     print("  - output/cms_clfs_combined.csv")
+    print("  - output/cms_physician_combined.csv")
+    print("  - output/cms_all_combined.csv")
     print("  - cms_clfs.db")
 
 
 if __name__ == "__main__":
     main()
-
