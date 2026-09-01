@@ -9,14 +9,26 @@ def run_script(script_name):
     print(f"RUNNING: {script_name}")
     print("=" * 60)
 
-    result = subprocess.run(
-        [sys.executable, script_name]
-    )
+    try:
+
+        result = subprocess.run(
+            [sys.executable, script_name],
+            check=False
+        )
+
+    except Exception as error:
+
+        print()
+        print(f"[ERROR] Could not start {script_name}")
+        print(f"Reason: {error}")
+
+        sys.exit(1)
 
     if result.returncode != 0:
 
         print()
         print(f"[ERROR] {script_name} failed.")
+        print(f"[ERROR] Exit code: {result.returncode}")
 
         sys.exit(result.returncode)
 
@@ -31,23 +43,49 @@ def main():
     print("CMS CLFS AUTOMATED PROJECT")
     print("=" * 60)
 
-    # Step 1 - Download and extract CMS files
+    print()
+    print("Starting complete automated pipeline...")
+    print()
+
+    # --------------------------------------------------
+    # STEP 1 - DOWNLOAD AND EXTRACT CMS FILES
+    # --------------------------------------------------
+
     run_script("download_files.py")
 
-    # Step 2 - Process Clinical data
+    # --------------------------------------------------
+    # STEP 2 - PROCESS CLINICAL DATA
+    # --------------------------------------------------
+
     run_script("etl_pipeline.py")
 
-    # Step 3 - Process Physician data
+    # --------------------------------------------------
+    # STEP 3 - PROCESS PHYSICIAN DATA
+    # --------------------------------------------------
+
     run_script("physician_parser.py")
 
-    # Step 4 - Combine Clinical + Physician data
+    # --------------------------------------------------
+    # STEP 4 - COMBINE CLINICAL + PHYSICIAN DATA
+    # --------------------------------------------------
+
     run_script("combine_datasets.py")
 
-    # Step 5 - Load combined data into SQLite
+    # --------------------------------------------------
+    # STEP 5 - LOAD DATA INTO SQLITE DATABASE
+    # --------------------------------------------------
+
     run_script("database.py")
 
-    # Step 6 - Run SQL analysis
+    # --------------------------------------------------
+    # STEP 6 - RUN SQL ANALYSIS
+    # --------------------------------------------------
+
     run_script("sql_queries.py")
+
+    # --------------------------------------------------
+    # PIPELINE COMPLETED
+    # --------------------------------------------------
 
     print()
     print("=" * 60)
@@ -60,6 +98,9 @@ def main():
     print("  - output/cms_physician_combined.csv")
     print("  - output/cms_all_combined.csv")
     print("  - cms_clfs.db")
+
+    print()
+    print("All pipeline stages completed successfully.")
 
 
 if __name__ == "__main__":

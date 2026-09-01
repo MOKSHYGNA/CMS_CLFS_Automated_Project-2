@@ -1,3 +1,4 @@
+
 import sqlite3
 
 
@@ -42,7 +43,7 @@ def main():
             COUNT(*) AS RECORD_COUNT
         FROM {TABLE_NAME}
         GROUP BY YEAR
-        ORDER BY YEAR
+        ORDER BY CAST(YEAR AS INTEGER)
         """
     )
 
@@ -53,40 +54,17 @@ def main():
         )
 
     # --------------------------------------------------
-    # QUERY 3 - RECORDS BY DATA TYPE
+    # QUERY 3 - UNIQUE HCPCS CODES
     # --------------------------------------------------
 
-    print("\n3. RECORDS BY DATA TYPE")
-
-    cursor.execute(
-        f"""
-        SELECT
-            DATA_TYPE,
-            COUNT(*) AS RECORD_COUNT
-        FROM {TABLE_NAME}
-        GROUP BY DATA_TYPE
-        ORDER BY RECORD_COUNT DESC
-        """
-    )
-
-    for data_type, count in cursor.fetchall():
-
-        print(
-            f"Data Type: {data_type} | "
-            f"Records: {count}"
-        )
-
-    # --------------------------------------------------
-    # QUERY 4 - UNIQUE HCPCS CODES
-    # --------------------------------------------------
-
-    print("\n4. UNIQUE HCPCS CODES")
+    print("\n3. UNIQUE HCPCS CODES")
 
     cursor.execute(
         f"""
         SELECT COUNT(DISTINCT HCPCS)
         FROM {TABLE_NAME}
         WHERE HCPCS IS NOT NULL
+        AND TRIM(HCPCS) <> ''
         """
     )
 
@@ -97,21 +75,26 @@ def main():
     )
 
     # --------------------------------------------------
-    # QUERY 5 - AVERAGE CLINICAL RATE BY YEAR
+    # QUERY 4 - AVERAGE RATE BY YEAR
     # --------------------------------------------------
 
-    print("\n5. AVERAGE CLINICAL RATE BY YEAR")
+    print("\n4. AVERAGE RATE BY YEAR")
 
     cursor.execute(
         f"""
         SELECT
             YEAR,
-            ROUND(AVG(RATE), 2) AS AVERAGE_RATE
+            ROUND(
+                AVG(
+                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
+                ),
+                2
+            ) AS AVERAGE_RATE
         FROM {TABLE_NAME}
-        WHERE DATA_TYPE = 'CLINICAL'
-          AND RATE IS NOT NULL
+        WHERE RATE IS NOT NULL
+        AND TRIM(RATE) <> ''
         GROUP BY YEAR
-        ORDER BY YEAR
+        ORDER BY CAST(YEAR AS INTEGER)
         """
     )
 
@@ -119,50 +102,93 @@ def main():
 
         print(
             f"Year: {year} | "
-            f"Average Clinical Rate: {average_rate}"
+            f"Average Rate: {average_rate}"
         )
 
     # --------------------------------------------------
-    # QUERY 6 - AVERAGE PHYSICIAN RATES
+    # QUERY 5 - HIGHEST RATE BY YEAR
     # --------------------------------------------------
 
-    print("\n6. AVERAGE PHYSICIAN RATES")
+    print("\n5. HIGHEST RATE BY YEAR")
 
     cursor.execute(
         f"""
         SELECT
-            ROUND(AVG(CAST(NON_FACILITY_RATE AS REAL)), 2),
-            ROUND(AVG(CAST(FACILITY_RATE AS REAL)), 2)
+            YEAR,
+            ROUND(
+                MAX(
+                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
+                ),
+                2
+            ) AS MAX_RATE
         FROM {TABLE_NAME}
-        WHERE DATA_TYPE = 'PHYSICIAN'
+        WHERE RATE IS NOT NULL
+        AND TRIM(RATE) <> ''
+        GROUP BY YEAR
+        ORDER BY CAST(YEAR AS INTEGER)
         """
     )
 
-    non_facility, facility = cursor.fetchone()
+    for year, max_rate in cursor.fetchall():
 
-    print(
-        f"Average Non-Facility Rate: {non_facility}"
-    )
-
-    print(
-        f"Average Facility Rate: {facility}"
-    )
+        print(
+            f"Year: {year} | "
+            f"Highest Rate: {max_rate}"
+        )
 
     # --------------------------------------------------
-    # QUERY 7 - TOP 10 HIGHEST UNIQUE HCPCS RATES
+    # QUERY 6 - LOWEST RATE BY YEAR
     # --------------------------------------------------
 
-    print("\n7. TOP 10 HIGHEST UNIQUE HCPCS RATES")
+    print("\n6. LOWEST RATE BY YEAR")
+
+    cursor.execute(
+        f"""
+        SELECT
+            YEAR,
+            ROUND(
+                MIN(
+                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
+                ),
+                2
+            ) AS MIN_RATE
+        FROM {TABLE_NAME}
+        WHERE RATE IS NOT NULL
+        AND TRIM(RATE) <> ''
+        GROUP BY YEAR
+        ORDER BY CAST(YEAR AS INTEGER)
+        """
+    )
+
+    for year, min_rate in cursor.fetchall():
+
+        print(
+            f"Year: {year} | "
+            f"Lowest Rate: {min_rate}"
+        )
+
+    # --------------------------------------------------
+    # QUERY 7 - TOP 10 HIGHEST HCPCS RATES
+    # --------------------------------------------------
+
+    print("\n7. TOP 10 HIGHEST HCPCS RATES")
 
     cursor.execute(
         f"""
         SELECT
             HCPCS,
-            MAX(RATE) AS MAX_RATE,
+            ROUND(
+                MAX(
+                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
+                ),
+                2
+            ) AS MAX_RATE,
             MAX(SHORTDESC) AS DESCRIPTION
         FROM {TABLE_NAME}
-        WHERE DATA_TYPE = 'CLINICAL'
-          AND RATE IS NOT NULL
+        WHERE RATE IS NOT NULL
+        AND TRIM(RATE) <> ''
+        AND HCPCS IS NOT NULL
+        AND TRIM(HCPCS) <> ''
         GROUP BY HCPCS
         ORDER BY MAX_RATE DESC
         LIMIT 10
@@ -178,20 +204,27 @@ def main():
         )
 
     # --------------------------------------------------
-    # QUERY 8 - LOWEST UNIQUE HCPCS RATES
+    # QUERY 8 - 10 LOWEST HCPCS RATES
     # --------------------------------------------------
 
-    print("\n8. 10 LOWEST UNIQUE HCPCS RATES")
+    print("\n8. 10 LOWEST HCPCS RATES")
 
     cursor.execute(
         f"""
         SELECT
             HCPCS,
-            MIN(RATE) AS MIN_RATE,
+            ROUND(
+                MIN(
+                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
+                ),
+                2
+            ) AS MIN_RATE,
             MIN(SHORTDESC) AS DESCRIPTION
         FROM {TABLE_NAME}
-        WHERE DATA_TYPE = 'CLINICAL'
-          AND RATE IS NOT NULL
+        WHERE RATE IS NOT NULL
+        AND TRIM(RATE) <> ''
+        AND HCPCS IS NOT NULL
+        AND TRIM(HCPCS) <> ''
         GROUP BY HCPCS
         ORDER BY MIN_RATE ASC
         LIMIT 10
@@ -247,18 +280,13 @@ def main():
             YEAR,
             HCPCS,
             EFF_DATE,
-            RATE,
+            CAST(NULLIF(TRIM(RATE), '') AS REAL) AS RATE,
             SHORTDESC
         FROM {TABLE_NAME}
         WHERE HCPCS = ?
-          AND DATA_TYPE = 'CLINICAL'
-        GROUP BY
-            YEAR,
-            HCPCS,
-            EFF_DATE,
-            RATE,
-            SHORTDESC
-        ORDER BY YEAR
+        ORDER BY
+            CAST(YEAR AS INTEGER),
+            EFF_DATE
         """,
         (search_code,)
     )
@@ -296,8 +324,9 @@ def main():
             COUNT(*) AS RECORD_COUNT
         FROM {TABLE_NAME}
         WHERE HCPCS IS NOT NULL
+        AND TRIM(HCPCS) <> ''
         GROUP BY HCPCS
-        ORDER BY RECORD_COUNT DESC
+        ORDER BY RECORD_COUNT DESC, HCPCS
         LIMIT 10
         """
     )
@@ -310,7 +339,7 @@ def main():
         )
 
     # --------------------------------------------------
-    # QUERY 12 - HCPCS AVAILABLE ACROSS ALL YEARS
+    # QUERY 12 - HCPCS AVAILABLE ACROSS ALL 9 YEARS
     # --------------------------------------------------
 
     print("\n12. HCPCS AVAILABLE ACROSS ALL YEARS")
@@ -321,9 +350,10 @@ def main():
             HCPCS,
             COUNT(DISTINCT YEAR) AS YEAR_COUNT
         FROM {TABLE_NAME}
-        WHERE DATA_TYPE = 'CLINICAL'
+        WHERE HCPCS IS NOT NULL
+        AND TRIM(HCPCS) <> ''
         GROUP BY HCPCS
-        HAVING COUNT(DISTINCT YEAR) = 3
+        HAVING COUNT(DISTINCT YEAR) = 9
         ORDER BY HCPCS
         LIMIT 10
         """
@@ -346,6 +376,8 @@ def main():
         f"""
         SELECT COUNT(DISTINCT SOURCE_FILE)
         FROM {TABLE_NAME}
+        WHERE SOURCE_FILE IS NOT NULL
+        AND TRIM(SOURCE_FILE) <> ''
         """
     )
 
@@ -354,6 +386,69 @@ def main():
     print(
         f"Source files represented: {source_count}"
     )
+
+    # --------------------------------------------------
+    # QUERY 14 - RECORDS BY INDICATOR
+    # --------------------------------------------------
+
+    print("\n14. RECORDS BY INDICATOR")
+
+    cursor.execute(
+        f"""
+        SELECT
+            COALESCE(INDICATOR, 'None') AS INDICATOR_VALUE,
+            COUNT(*) AS RECORD_COUNT
+        FROM {TABLE_NAME}
+        GROUP BY INDICATOR
+        ORDER BY RECORD_COUNT DESC
+        """
+    )
+
+    for indicator, count in cursor.fetchall():
+
+        print(
+            f"Indicator: {indicator} | "
+            f"Records: {count}"
+        )
+
+    # --------------------------------------------------
+    # QUERY 15 - OVERALL RATE SUMMARY
+    # --------------------------------------------------
+
+    print("\n15. OVERALL RATE SUMMARY")
+
+    cursor.execute(
+        f"""
+        SELECT
+            ROUND(
+                MIN(
+                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
+                ),
+                2
+            ),
+            ROUND(
+                MAX(
+                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
+                ),
+                2
+            ),
+            ROUND(
+                AVG(
+                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
+                ),
+                2
+            )
+        FROM {TABLE_NAME}
+        WHERE RATE IS NOT NULL
+        AND TRIM(RATE) <> ''
+        """
+    )
+
+    minimum, maximum, average = cursor.fetchone()
+
+    print(f"Minimum Rate: {minimum}")
+    print(f"Maximum Rate: {maximum}")
+    print(f"Average Rate: {average}")
 
     # --------------------------------------------------
     # CLOSE DATABASE
@@ -373,3 +468,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

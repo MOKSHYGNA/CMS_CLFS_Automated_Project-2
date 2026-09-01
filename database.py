@@ -4,14 +4,13 @@ import pandas as pd
 from pathlib import Path
 
 
-# --------------------------------------------------
+# ============================================================
 # CONFIGURATION
-# --------------------------------------------------
+# ============================================================
 
 INPUT_FILE = Path(
     "output/cms_all_combined.csv"
 )
-
 
 DATABASE_FILE = Path(
     "cms_clfs.db"
@@ -20,9 +19,9 @@ DATABASE_FILE = Path(
 TABLE_NAME = "clfs_data"
 
 
-# --------------------------------------------------
+# ============================================================
 # LOAD CSV INTO SQLITE
-# --------------------------------------------------
+# ============================================================
 
 def load_database():
 
@@ -31,9 +30,9 @@ def load_database():
     print("CMS CLFS DATABASE LOADER")
     print("=" * 60)
 
-    # --------------------------------------------------
+    # ========================================================
     # CHECK INPUT FILE
-    # --------------------------------------------------
+    # ========================================================
 
     if not INPUT_FILE.exists():
 
@@ -42,23 +41,35 @@ def load_database():
         )
 
         print(
-            "Run etl_pipeline.py first."
+            "[INFO] Run physician_parser.py and "
+            "combine_datasets.py first."
         )
 
-        return
+        return False
 
     print(
         f"\n[INFO] Reading: {INPUT_FILE}"
     )
 
-    # --------------------------------------------------
-    # READ CLEAN CSV
-    # --------------------------------------------------
+    # ========================================================
+    # READ CSV
+    # ========================================================
 
-    df = pd.read_csv(
-        INPUT_FILE,
-        encoding="utf-8"
-    )
+    try:
+
+        df = pd.read_csv(
+            INPUT_FILE,
+            encoding="utf-8",
+            dtype=str
+        )
+
+    except Exception as error:
+
+        print(
+            f"[ERROR] Could not read CSV: {error}"
+        )
+
+        return False
 
     print(
         f"[OK] Rows loaded from CSV: {len(df)}"
@@ -68,36 +79,82 @@ def load_database():
         f"[OK] Columns: {len(df.columns)}"
     )
 
-    # --------------------------------------------------
-    # CREATE SQLITE DATABASE
-    # --------------------------------------------------
+    # ========================================================
+    # CHECK DATA_TYPE
+    # ========================================================
 
-    connection = sqlite3.connect(
-        DATABASE_FILE
-    )
+    if "DATA_TYPE" in df.columns:
 
-    print(
-        f"[OK] Connected to database: {DATABASE_FILE}"
-    )
+        print("\n[OK] DATA_TYPE column found.")
 
-    # --------------------------------------------------
-    # LOAD DATA INTO TABLE
-    # --------------------------------------------------
+        print("\nData type summary:")
 
-    df.to_sql(
-        TABLE_NAME,
-        connection,
-        if_exists="replace",
-        index=False
-    )
+        print(
+            df["DATA_TYPE"].value_counts()
+        )
 
-    print(
-        f"[OK] Table created: {TABLE_NAME}"
-    )
+    else:
 
-    # --------------------------------------------------
+        print(
+            "\n[WARNING] DATA_TYPE column not found."
+        )
+
+    # ========================================================
+    # CONNECT TO SQLITE DATABASE
+    # ========================================================
+
+    try:
+
+        connection = sqlite3.connect(
+            DATABASE_FILE
+        )
+
+        print(
+            f"\n[OK] Connected to database: "
+            f"{DATABASE_FILE}"
+        )
+
+    except Exception as error:
+
+        print(
+            f"[ERROR] Could not connect to database: "
+            f"{error}"
+        )
+
+        return False
+
+    # ========================================================
+    # LOAD DATA INTO SQLITE
+    # ========================================================
+
+    try:
+
+        df.to_sql(
+            TABLE_NAME,
+            connection,
+            if_exists="replace",
+            index=False
+        )
+
+        print(
+            f"[OK] Table created/updated: "
+            f"{TABLE_NAME}"
+        )
+
+    except Exception as error:
+
+        print(
+            f"[ERROR] Could not load data into database: "
+            f"{error}"
+        )
+
+        connection.close()
+
+        return False
+
+    # ========================================================
     # VERIFY ROW COUNT
-    # --------------------------------------------------
+    # ========================================================
 
     cursor = connection.cursor()
 
@@ -111,9 +168,9 @@ def load_database():
         f"[OK] Rows in database: {row_count}"
     )
 
-    # --------------------------------------------------
-    # SHOW TABLE COLUMNS
-    # --------------------------------------------------
+    # ========================================================
+    # SHOW DATABASE COLUMNS
+    # ========================================================
 
     cursor.execute(
         f"PRAGMA table_info({TABLE_NAME})"
@@ -129,52 +186,156 @@ def load_database():
             f"  - {column[1]}"
         )
 
-    # --------------------------------------------------
-    # SAMPLE QUERY
-    # --------------------------------------------------
+    # ========================================================
+    # VERIFY DATA TYPES IN DATABASE
+    # ========================================================
 
-    print("\nSample database records:")
+    if "DATA_TYPE" in df.columns:
 
-    sample_query = f"""
+        cursor.execute(
+            f"""
+            SELECT
+                DATA_TYPE,
+                COUNT(*)
+            FROM {TABLE_NAME}
+            GROUP BY DATA_TYPE
+            """
+        )
+
+        print("\nDatabase data type summary:")
+
+        for data_type, count in cursor.fetchall():
+
+            print(
+                f"  - {data_type}: {count}"
+            )
+
+    # ========================================================
+    # SAMPLE CLINICAL RECORDS
+    # ========================================================
+
+    print("\nSample clinical records:")
+
+    clinical_query = f"""
         SELECT
             YEAR,
             HCPCS,
+            MOD,
             EFF_DATE,
+            INDICATOR,
             RATE,
-            SHORTDESC
+            SHORTDESC,
+            DATA_TYPE
         FROM {TABLE_NAME}
+        WHERE DATA_TYPE = 'CLINICAL'
         LIMIT 5
     """
 
-    sample_df = pd.read_sql_query(
-        sample_query,
-        connection
-    )
+    try:
 
-    print(
-        sample_df.to_string(
-            index=False
+        sample_df = pd.read_sql_query(
+            clinical_query,
+            connection
         )
-    )
 
-    # --------------------------------------------------
+        if not sample_df.empty:
+
+            print(
+                sample_df.to_string(
+                    index=False
+                )
+            )
+
+        else:
+
+            print(
+                "[INFO] No clinical records found."
+            )
+
+    except Exception as error:
+
+        print(
+            f"[WARNING] Clinical sample query failed: "
+            f"{error}"
+        )
+
+    # ========================================================
+    # SAMPLE PHYSICIAN RECORDS
+    # ========================================================
+
+    print("\nSample physician records:")
+
+    physician_query = f"""
+        SELECT
+            YEAR,
+            HCPCS,
+            MOD,
+            NON_FACILITY_RATE,
+            FACILITY_RATE,
+            PCTC_INDICATOR,
+            STATUS_CODE,
+            FILE_TYPE,
+            DATA_TYPE
+        FROM {TABLE_NAME}
+        WHERE DATA_TYPE = 'PHYSICIAN'
+        LIMIT 5
+    """
+
+    try:
+
+        sample_physician_df = pd.read_sql_query(
+            physician_query,
+            connection
+        )
+
+        if not sample_physician_df.empty:
+
+            print(
+                sample_physician_df.to_string(
+                    index=False
+                )
+            )
+
+        else:
+
+            print(
+                "[INFO] No physician records found."
+            )
+
+    except Exception as error:
+
+        print(
+            f"[WARNING] Physician sample query failed: "
+            f"{error}"
+        )
+
+    # ========================================================
     # CLOSE DATABASE
-    # --------------------------------------------------
+    # ========================================================
 
     connection.close()
 
-    print("\n[OK] Database connection closed.")
+    print(
+        "\n[OK] Database connection closed."
+    )
 
     print("\n")
     print("=" * 60)
     print("DATABASE LOAD COMPLETED")
     print("=" * 60)
 
+    return True
 
-# --------------------------------------------------
+
+# ============================================================
 # RUN
-# --------------------------------------------------
+# ============================================================
 
 if __name__ == "__main__":
-    load_database()
+
+    success = load_database()
+
+    if not success:
+
+        raise SystemExit(1)
 

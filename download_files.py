@@ -7,8 +7,10 @@ import re
 import hashlib
 import csv
 import shutil
+import json
 
 from change_detector import compare_csv_files
+from version_detector import parse_version
 
 
 # ============================================================
@@ -29,7 +31,89 @@ SUPPORTED_QUARTERS = {
     "Q4"
 }
 
+VERSION_TRACKER_FILE = Path("version_tracker.json")
+
 session = requests.Session()
+
+
+# ============================================================
+# VERSION TRACKER
+# ============================================================
+
+def load_version_tracker():
+
+    if not VERSION_TRACKER_FILE.exists():
+        return {}
+
+    try:
+
+        with open(
+            VERSION_TRACKER_FILE,
+            "r",
+            encoding="utf-8"
+        ) as file:
+
+            return json.load(file)
+
+    except Exception as error:
+
+        print(
+            f"[WARNING] Could not load version tracker: {error}"
+        )
+
+        return {}
+
+
+def save_version_tracker(tracker):
+
+    try:
+
+        with open(
+            VERSION_TRACKER_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+                tracker,
+                file,
+                indent=4
+            )
+
+        print(
+            "[OK] Version tracker updated."
+        )
+
+    except Exception as error:
+
+        print(
+            f"[ERROR] Could not save version tracker: {error}"
+        )
+
+
+def get_version_status(file_name, tracker):
+
+    parsed = parse_version(file_name)
+
+    if parsed is None:
+        return "UNKNOWN"
+
+    key = f"{parsed['year']}-{parsed['quarter']}"
+
+    cms_version = parsed["version"]
+
+    stored_version = tracker.get(key)
+
+    if stored_version is None:
+        return "NEW"
+
+    if cms_version > int(stored_version):
+        return "NEW_VERSION"
+
+    if cms_version == int(stored_version):
+        return "UNCHANGED"
+
+    return "OLDER_VERSION"
 
 
 # ============================================================
@@ -37,15 +121,13 @@ session = requests.Session()
 # ============================================================
 
 def get_download_url(url):
-    """
-    Convert CMS license/download URLs
-    into the actual downloadable file URL.
-    """
 
     parsed = urlparse(url)
+
     query = parse_qs(parsed.query)
 
     if "file" in query:
+
         file_path = query["file"][0]
 
         if file_path.startswith("/"):
@@ -55,15 +137,13 @@ def get_download_url(url):
 
 
 def calculate_file_hash(file_path):
-    """
-    Calculate SHA-256 hash of a file.
-    Used to detect whether a CMS ZIP file changed.
-    """
 
     sha256 = hashlib.sha256()
 
     with open(file_path, "rb") as file:
+
         while True:
+
             chunk = file.read(8192)
 
             if not chunk:
@@ -75,9 +155,6 @@ def calculate_file_hash(file_path):
 
 
 def save_hash(hash_file, file_hash):
-    """
-    Save SHA-256 hash to disk.
-    """
 
     with open(
         hash_file,
@@ -89,9 +166,6 @@ def save_hash(hash_file, file_hash):
 
 
 def load_hash(hash_file):
-    """
-    Load previously saved SHA-256 hash.
-    """
 
     if not hash_file.exists():
         return None
@@ -112,11 +186,6 @@ def load_hash(hash_file):
 
 
 def read_csv_records(csv_file):
-    """
-    Read CSV records and return them as a set.
-
-    Blank rows are ignored.
-    """
 
     records = set()
 
@@ -192,6 +261,17 @@ print("\nScanning CMS page for CLFS files...")
 
 selected_files = []
 
+version_tracker = load_version_tracker()
+
+print("\n[INFO] Current tracked versions:")
+
+for key, version in version_tracker.items():
+
+    print(
+        f"  {key} -> V{version}"
+    )
+
+
 for link in soup.find_all(
     "a",
     href=True
@@ -221,6 +301,20 @@ for link in soup.find_all(
 
     version = match.group(3) or "V1"
 
+    # --------------------------------------------------------
+    # VERSION CHECK
+    # --------------------------------------------------------
+
+    version_status = get_version_status(
+        name,
+        version_tracker
+    )
+
+    print(
+        f"[VERSION CHECK] "
+        f"{name} -> {version_status}"
+    )
+
     page_url = urljoin(
         CMS_URL,
         link["href"]
@@ -232,33 +326,74 @@ for link in soup.find_all(
             "year": year,
             "quarter": quarter,
             "version": version,
-            "page_url": page_url
+            "page_url": page_url,
+            "version_status": version_status
         }
+    )
+
+    print(
+        f"[FOUND] {name} | "
+        f"Year: {year} | "
+        f"Quarter: {quarter} | "
+        f"Version: {version}"
     )
 
 
 print(
-    f"[INFO] Detected "
+    f"\n[INFO] Detected "
     f"{len(selected_files)} CMS CLFS files."
 )
 
 
 # ============================================================
-# STEP 3: REMOVE DUPLICATE FILES
+# STEP 3: KEEP LATEST VERSION
 # ============================================================
 
-unique_files = {}
+latest_files = {}
 
 for file in selected_files:
 
-    key = file["name"]
+    key = (
+        file["year"],
+        file["quarter"]
+    )
 
-    unique_files[key] = file
+    current_version = int(
+        file["version"].replace("V", "")
+    )
+
+    if key not in latest_files:
+
+        latest_files[key] = file
+
+    else:
+
+        existing_version = int(
+            latest_files[key]["version"].replace("V", "")
+        )
+
+        if current_version > existing_version:
+
+            latest_files[key] = file
 
 
 selected_files = list(
-    unique_files.values()
+    latest_files.values()
 )
+
+
+print(
+    f"[INFO] Latest CMS versions selected: "
+    f"{len(selected_files)}"
+)
+
+for file in selected_files:
+
+    print(
+        f"  {file['name']} | "
+        f"Version: {file['version']} | "
+        f"Status: {file.get('version_status', 'UNKNOWN')}"
+    )
 
 
 # ============================================================
@@ -309,6 +444,7 @@ for file in selected_files:
             href
         )
 
+        # Correct ZIP detection regex
         if re.search(
             r"\.zip(?:$|\?)",
             full_url,
@@ -319,6 +455,11 @@ for file in selected_files:
                 get_download_url(full_url)
             )
 
+            print(
+                f"[OK] ZIP found: "
+                f"{file['download_url']}"
+            )
+
             break
 
 
@@ -327,6 +468,7 @@ for file in selected_files:
 # ============================================================
 
 print("\n")
+
 print("=" * 60)
 print("CHECKING CMS FILES FOR NEW OR CHANGED DATA")
 print("=" * 60)
@@ -386,7 +528,7 @@ for file in selected_files:
 
 
     # ========================================================
-    # CASE 2: ZIP EXISTS BUT DATA IS MISSING
+    # CASE 2: DATA IS MISSING
     # ========================================================
 
     if (
@@ -412,7 +554,6 @@ for file in selected_files:
 
     # ========================================================
     # CASE 3: EXISTING FILE
-    # CHECK WHETHER CMS FILE CHANGED
     # ========================================================
 
     print(
@@ -483,8 +624,7 @@ for file in selected_files:
 
 
         # ====================================================
-        # FIRST RUN
-        # CREATE BASELINE HASH
+        # FIRST RUN - CREATE BASELINE
         # ====================================================
 
         if previous_hash is None:
@@ -528,12 +668,10 @@ for file in selected_files:
             f"{file['name']} has been updated on CMS."
         )
 
-
         print(
             f"[INFO] Old hash: "
             f"{previous_hash}"
         )
-
 
         print(
             f"[INFO] New hash: "
@@ -545,9 +683,7 @@ for file in selected_files:
 
         file["current_hash"] = current_hash
 
-        file["temp_zip_path"] = (
-            temp_zip_path
-        )
+        file["temp_zip_path"] = temp_zip_path
 
         files_to_process.append(
             file
@@ -573,6 +709,7 @@ for file in selected_files:
 # ============================================================
 
 print("\n")
+
 print("=" * 60)
 print("STARTING AUTOMATIC DOWNLOAD / UPDATE")
 print("=" * 60)
@@ -639,7 +776,7 @@ for file in files_to_process:
     try:
 
         # ====================================================
-        # SAVE OLD CSV BEFORE DELETING OLD DATA
+        # BACKUP OLD CSV
         # ====================================================
 
         old_csv_files = []
@@ -684,7 +821,7 @@ for file in files_to_process:
 
 
         # ====================================================
-        # USE TEMP ZIP IF FILE WAS UPDATED
+        # USE TEMP ZIP IF UPDATED
         # ====================================================
 
         temp_zip_path = file.get(
@@ -801,7 +938,7 @@ for file in files_to_process:
 
 
         # ====================================================
-        # FIND NEW CSV FILES
+        # FIND NEW CSV
         # ====================================================
 
         csv_files = list(
@@ -838,17 +975,13 @@ for file in files_to_process:
 
             print("\n")
 
-            print(
-                "=" * 60
-            )
+            print("=" * 60)
 
             print(
                 "DETECTING RECORD CHANGES"
             )
 
-            print(
-                "=" * 60
-            )
+            print("=" * 60)
 
 
             try:
@@ -861,18 +994,14 @@ for file in files_to_process:
 
                 print("\n")
 
-                print(
-                    "=" * 60
-                )
+                print("=" * 60)
 
                 print(
                     f"RECORD CHANGE REPORT: "
                     f"{file['name']}"
                 )
 
-                print(
-                    "=" * 60
-                )
+                print("=" * 60)
 
 
                 print(
@@ -909,11 +1038,9 @@ for file in files_to_process:
                 # SHOW NEW RECORDS
                 # ============================================
 
-                new_records = (
-                    change_report.get(
-                        "new_records",
-                        []
-                    )
+                new_records = change_report.get(
+                    "new_records",
+                    []
                 )
 
 
@@ -958,11 +1085,9 @@ for file in files_to_process:
                 # SHOW MODIFIED RECORDS
                 # ============================================
 
-                modified_records = (
-                    change_report.get(
-                        "modified_records",
-                        []
-                    )
+                modified_records = change_report.get(
+                    "modified_records",
+                    []
                 )
 
 
@@ -1020,6 +1145,28 @@ for file in files_to_process:
 
         print(
             "[OK] Hash updated."
+        )
+
+
+        # ====================================================
+        # UPDATE VERSION TRACKER
+        # ====================================================
+
+        tracker_key = (
+            f"{file['year']}-{file['quarter']}"
+        )
+
+
+        tracker_version = int(
+            file["version"].replace("V", "")
+        )
+
+
+        version_tracker[tracker_key] = tracker_version
+
+
+        save_version_tracker(
+            version_tracker
         )
 
 
