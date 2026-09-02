@@ -40,7 +40,7 @@ def main():
 
     print()
     print("=" * 60)
-    print("CMS CLFS AUTOMATED PROJECT")
+    print("CMS CLFS + DME AUTOMATED PROJECT")
     print("=" * 60)
 
     print()
@@ -48,13 +48,13 @@ def main():
     print()
 
     # --------------------------------------------------
-    # STEP 1 - DOWNLOAD AND EXTRACT CMS CLFS FILES
+    # STEP 1 - DOWNLOAD AND UPDATE CMS CLFS FILES
     # --------------------------------------------------
 
     run_script("download_files.py")
 
     # --------------------------------------------------
-    # STEP 2 - PROCESS CLINICAL DATA
+    # STEP 2 - PROCESS CLINICAL / CLFS DATA
     # --------------------------------------------------
 
     run_script("etl_pipeline.py")
@@ -84,7 +84,7 @@ def main():
     run_script("anesthesia_downloader.py")
 
     # --------------------------------------------------
-    # STEP 7 - PARSE 3 YEARS OF ANESTHESIA DATA
+    # STEP 7 - PARSE ANESTHESIA DATA
     # --------------------------------------------------
 
     run_script("anesthesia_parser.py")
@@ -96,7 +96,49 @@ def main():
     run_script("anesthesia_database.py")
 
     # --------------------------------------------------
-    # STEP 9 - RUN SQL ANALYSIS
+    # STEP 9 - DOWNLOAD DME FILES
+    # --------------------------------------------------
+
+    run_script("dme_downloader.py")
+
+    # --------------------------------------------------
+    # STEP 10 - PARSE DMEPOS DATA
+    # --------------------------------------------------
+
+    run_script("dme_parser.py")
+
+    # --------------------------------------------------
+    # STEP 11 - CREATE DME DATABASE TABLES
+    # --------------------------------------------------
+
+    run_script("dme_database.py")
+
+    # --------------------------------------------------
+    # STEP 12 - LOAD MAIN DME DATA
+    # --------------------------------------------------
+
+    run_script("dme_loader.py")
+
+    # --------------------------------------------------
+    # STEP 13 - LOAD DME STATE PRICING
+    # --------------------------------------------------
+
+    run_script("dme_state_loader.py")
+
+    # --------------------------------------------------
+    # STEP 14 - LOAD DMEPEN STATE PRICING
+    # --------------------------------------------------
+
+    run_script("dme_pen_state_loader.py")
+
+    # --------------------------------------------------
+    # STEP 15 - LOAD FORMER CBA PRICING
+    # --------------------------------------------------
+
+    run_script("former_cba_pricing_loader.py")
+
+    # --------------------------------------------------
+    # STEP 16 - RUN SQL ANALYSIS
     # --------------------------------------------------
 
     run_script("sql_queries.py")
@@ -107,7 +149,7 @@ def main():
 
     print()
     print("=" * 60)
-    print("COMPLETE PIPELINE FINISHED SUCCESSFULLY")
+    print("COMPLETE CMS PIPELINE FINISHED SUCCESSFULLY")
     print("=" * 60)
 
     print()
@@ -117,6 +159,7 @@ def main():
     print("  - output/cms_physician_combined.csv")
     print("  - output/cms_all_combined.csv")
     print("  - output/anesthesia_3year_clean.csv")
+    print("  - output/dme_combined.csv")
     print("  - cms_clfs.db")
 
     print()
@@ -124,6 +167,15 @@ def main():
 
     print("  - clfs_data")
     print("  - anesthesia_data")
+    print("  - dme_fee_schedule")
+    print("  - dme_pen_schedule")
+    print("  - dme_rural_zip")
+    print("  - dme_former_cba_fee")
+    print("  - dme_former_cba_zip")
+    print("  - dme_mail_order_dts")
+    print("  - dme_state_pricing")
+    print("  - dme_pen_state_pricing")
+    print("  - dme_former_cba_pricing")
 
     print()
     print("All pipeline stages completed successfully.")

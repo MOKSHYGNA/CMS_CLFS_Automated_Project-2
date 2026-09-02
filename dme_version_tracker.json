@@ -1,0 +1,455 @@
+{
+    "DME00-B": {
+        "year": "00",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme00_b.zip",
+        "sha256": "4bc4b132114e841bbbee231f24e384df28809e1ba8043ab55985f0bb4ba51fa5",
+        "status": "downloaded"
+    },
+    "DME00-C": {
+        "year": "00",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme00_c.zip",
+        "sha256": "18fa3d161b4e60355c60ded08016a6f879e70da075200bc30a23452381a14cf6",
+        "status": "downloaded"
+    },
+    "DME01-A": {
+        "year": "01",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme01_a.zip",
+        "sha256": "a5e2d56913cd95f9c1ad2ada29681ab9bf4193c9097018033ca5a876b63f0044",
+        "status": "downloaded"
+    },
+    "DME10-C": {
+        "year": "10",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/pen2010puf.zip",
+        "sha256": "3e0e43eb59edf784a1a2159fb49d6b47c353df19ec1c43cf0a30997fe779d2c3",
+        "status": "downloaded"
+    },
+    "DME11-A": {
+        "year": "11",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme2011_penpuf_excel.zip",
+        "sha256": "ea7ba7e2f72f0110f663378edfa9819e7b821b8ad80b5877b938f3f203ca4f1d",
+        "status": "downloaded"
+    },
+    "DME11-C": {
+        "year": "11",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme11_c.zip",
+        "sha256": "588da8d38e8eed4afa687a71ada0b79c03b8c82656e556a9698349066e78b86d",
+        "status": "downloaded"
+    },
+    "DME12-A": {
+        "year": "12",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme12_a_excel.zip",
+        "sha256": "00c953ff4add3682020ba1b3d2eec4f5e2a873de4935bac489a5660c94987add",
+        "status": "downloaded"
+    },
+    "DME12-C": {
+        "year": "12",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme12_c.zip",
+        "sha256": "ad9fba68f705188268caa3a47e60cbb6a51d44946c56dabdbbad290abc23fab4",
+        "status": "downloaded"
+    },
+    "DME13-A": {
+        "year": "13",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme13-a.zip",
+        "sha256": "0a207b284536aaa377618fd8be62ce60ea3c8103d2fe65057b8680ff1df652b9",
+        "status": "downloaded"
+    },
+    "DME13-B": {
+        "year": "13",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme13_b.zip",
+        "sha256": "622c1c109c6be4e099c7ba301d88927cbddd8307aab4f99f4cb37188682f2efa",
+        "status": "downloaded"
+    },
+    "DME13-C": {
+        "year": "13",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme13-c-file.zip",
+        "sha256": "0d36a3f31a5c2711a61a6da30390f9fb1772b493c6224b1474bde6360012a83b",
+        "status": "downloaded"
+    },
+    "DME14-A": {
+        "year": "14",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme14-a.zip",
+        "sha256": "32e95a3177aa94c69d01c6cfd3ef8f71d9c65fae81efd9eedf208b07fcf18978",
+        "status": "downloaded"
+    },
+    "DME14-B": {
+        "year": "14",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme14-b.zip",
+        "sha256": "1584fafc4c4bf318412cfb8ca0e35d7e1323914bddb853f660186756bd9012b3",
+        "status": "downloaded"
+    },
+    "DME14-C": {
+        "year": "14",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme14-c.zip",
+        "sha256": "367ea19317d545bb71400b9755b473934efb69a4aa62f977ccca0ce2fc8398e5",
+        "status": "downloaded"
+    },
+    "DME15-A": {
+        "year": "15",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme15-a.zip",
+        "sha256": "d206ed03aa27024a93ca3775df66bb49bb63af9bdb264b229b1fe6aab0c89024",
+        "status": "downloaded"
+    },
+    "DME15-C": {
+        "year": "15",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme15-c.zip",
+        "sha256": "03cca73f1d7a791cc0bb2852297b4dc5f4c9b22dd3253628a3939aa9a6561ee0",
+        "status": "downloaded"
+    },
+    "DME15-D": {
+        "year": "15",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme15-d.zip",
+        "sha256": "7c9b6c3b6262e3b1fd1d9618ead7cf04533a2ae0db5739af6eddebec6a0e97ef",
+        "status": "downloaded"
+    },
+    "DME16-A": {
+        "year": "16",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme16-a.zip",
+        "sha256": "d557d058f553d0220dcecdf667397a28fad87b1f479f0802c988abdaf178bebe",
+        "status": "downloaded"
+    },
+    "DME16-C": {
+        "year": "16",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme16-c.zip",
+        "sha256": "2ec51dfb846a4720920a9f6f33b4eb9f8f7723c4e41ba5c9a8e8dd9110f98e33",
+        "status": "downloaded"
+    },
+    "DME16-D": {
+        "year": "16",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme16-d.zip",
+        "sha256": "4af4ac9e7adeb85a78e2836f2624ef30c38b0e8bc89b0ac13121700b8e9a16cb",
+        "status": "downloaded"
+    },
+    "DME17-A": {
+        "year": "17",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme17-a.zip",
+        "sha256": "efa45834edf7e9fb9bded6d676bd017e1bb1293d903e8d2d6a27d5b8662dae98",
+        "status": "downloaded"
+    },
+    "DME17-B": {
+        "year": "17",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme17-b.zip",
+        "sha256": "3a6dcca1200a6bf534524065ddc0018879e1f0ff22c91f8649a22f1c54911711",
+        "status": "downloaded"
+    },
+    "DME17-C": {
+        "year": "17",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme17-c.zip",
+        "sha256": "3f75ef3a07c7d61df4c84ec3e85576534647e3b589997ba1c4adf67616b9c8ae",
+        "status": "downloaded"
+    },
+    "DME17-D": {
+        "year": "17",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme17-d.zip",
+        "sha256": "067741507730e151be23a5c64efcf84816aab0534cfbd22ab18c4a608d19fed9",
+        "status": "downloaded"
+    },
+    "DME18-A": {
+        "year": "18",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme18-a.zip",
+        "sha256": "fc8a9f23ffb0c862d91dd271eb9de913a1886c1a0e284fe5e244a8ff2016b2fe",
+        "status": "downloaded"
+    },
+    "DME18-B": {
+        "year": "18",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme18-b.zip",
+        "sha256": "cd7ec03d644506f6b4a684429db758f32e1718f5e81957eabb6c0db66a2a48aa",
+        "status": "downloaded"
+    },
+    "DME18-C": {
+        "year": "18",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme18-c.zip",
+        "sha256": "2d3b4687496e22bf28f5ec22a100808126e8fb4c602f9198695db5056f97663d",
+        "status": "downloaded"
+    },
+    "DME18-D": {
+        "year": "18",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme18-d.zip",
+        "sha256": "0fbe15cc43eb59619d70fef8426727ee7667874649916703841e855498f5b119",
+        "status": "downloaded"
+    },
+    "DME19-A": {
+        "year": "19",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme19-a.zip",
+        "sha256": "a3069a1baca95d6841093befe6a4ad9c52543d64fd8d070518800a964f8f91ec",
+        "status": "downloaded"
+    },
+    "DME19-B": {
+        "year": "19",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme19-b.zip",
+        "sha256": "5b5f27e91660aa6a8ddb0bc7d196d0b7f5e3082c350c91475d69413e8d668b04",
+        "status": "downloaded"
+    },
+    "DME19-C": {
+        "year": "19",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme19-c.zip",
+        "sha256": "0d53c7a8685871345f74ad79ded06b95d8656a99e8bdaa27c9ff76aa652a4b61",
+        "status": "downloaded"
+    },
+    "DME19-D": {
+        "year": "19",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme19-d.zip",
+        "sha256": "60d66c451ce9c3b4f18bc1e89152528c04af7ffa82005d00ac12d3283d769198",
+        "status": "downloaded"
+    },
+    "DME20-A": {
+        "year": "20",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/files/zip/dme20.zip",
+        "sha256": "aaf521646970de2567639cdd4e62c76909b9ba3e2c2cebcd085ddcd6689dcd6b",
+        "status": "downloaded"
+    },
+    "DME20-B": {
+        "year": "20",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/files/zip/dme20-b.zip",
+        "sha256": "2b66cbbb0e7b77816d3718d7e5f5b6ad01800d9161fa18200660cf5aa608fe8f",
+        "status": "downloaded"
+    },
+    "DME20-C": {
+        "year": "20",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/files/zip/dme20-c-updated-06292020.zip",
+        "sha256": "5e2ed6dca3515373d937e29c92a14b66bd180818fdc13b01b6702a6e9634da63",
+        "status": "downloaded"
+    },
+    "DME20-D": {
+        "year": "20",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/files/zip/dme20-d.zip",
+        "sha256": "bf86986a24dd1a6bba051b9845160bb008b71933e3d178844f5117dbba7e5a6c",
+        "status": "downloaded"
+    },
+    "DME21-A": {
+        "year": "21",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/files/zip/dme21.zip",
+        "sha256": "051785898e3ae3e3c873ee7e09b77b6b2e1019e766e26eb343f2e036fd3b9d6d",
+        "status": "downloaded"
+    },
+    "DME21-B": {
+        "year": "21",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/files/zip/dme21-b-updated-04062021.zip",
+        "sha256": "ff3b4045c958c617cf037f2e1fc1eec16cb6a764678594c0d70933dd4a6ab6cb",
+        "status": "downloaded"
+    },
+    "DME21-D": {
+        "year": "21",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/files/zip/dme21-d-updated-09272021.zip",
+        "sha256": "48342ef7fcbfd8f5443750b0d0a4aea0ab2f0483df7e4024089a87ae331b4cdf",
+        "status": "downloaded"
+    },
+    "DME22-A": {
+        "year": "22",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/files/zip/dme22.zip",
+        "sha256": "019b2dbced7943086b340d9977ca930a73f4ed84564a3fd86a33a9989687fec0",
+        "status": "downloaded"
+    },
+    "DME22-B": {
+        "year": "22",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/files/zip/dme22-b-posted-031522.zip",
+        "sha256": "1df8c7883f9f2c8b7ed924d663ed422b27101d073f64cf31b6d59189180f5d25",
+        "status": "downloaded"
+    },
+    "DME22-C": {
+        "year": "22",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/files/zip/dme22c-posted-061722.zip",
+        "sha256": "eaf1a6e47592c98fdc6129d6f5b12df52799d55443dab7f518ef188508d52deb",
+        "status": "downloaded"
+    },
+    "DME22-D": {
+        "year": "22",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/files/zip/dme22-d.zip",
+        "sha256": "eee5dccde5848451d195441fe5c4dc74e74107c605b3b4aecb0b7e3354771275",
+        "status": "downloaded"
+    },
+    "DME23-A": {
+        "year": "23",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/files/zip/dme23-updated-12192022.zip",
+        "sha256": "79c4eb5f50490f90525fd46531393d774f3429eef17befdbae63f6befbfa5a69",
+        "status": "downloaded"
+    },
+    "DME23-B": {
+        "year": "23",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/files/zip/dme23-b-updated-03/30/2023.zip",
+        "sha256": "74888eaca8480b0dbcb5d97f3eb0d29968793937360785b093bf60f018e1fb15",
+        "status": "downloaded"
+    },
+    "DME23-C": {
+        "year": "23",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/files/zip/dme23c.zip",
+        "sha256": "5b1c2012433716dbc514b9a201556bdfb3b691c98932fae2cdb8113d71da505e",
+        "status": "downloaded"
+    },
+    "DME23-D": {
+        "year": "23",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/files/zip/dme23d.zip",
+        "sha256": "24a1295deed451aba46111e5c6a039137f6706a00c40851016a40049d8c34dcd",
+        "status": "downloaded"
+    },
+    "DME24-A": {
+        "year": "24",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/files/zip/dme24.zip",
+        "sha256": "1c5ce6330308e108edf9dcd887ea4a7addcf1d6696812e0b69d7154c7c162803",
+        "etag": null,
+        "last_modified": "Tue, 19 Dec 2023 21:13:28 GMT",
+        "content_length": "5100820",
+        "status": "downloaded"
+    },
+    "DME24-B": {
+        "year": "24",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/files/zip/dme24-b-updated-04/10/2024.zip",
+        "sha256": "25107057d110c02865adaa7ddc28071142ac7a51c7f751fec59fd368f2ed4691",
+        "etag": null,
+        "last_modified": "Wed, 10 Apr 2024 20:09:24 GMT",
+        "content_length": "5113623",
+        "status": "downloaded"
+    },
+    "DME24-C": {
+        "year": "24",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/files/zip/dme24-c.zip",
+        "sha256": "502fc40614b3c42711d5b6654cf8e783a571718eafba1214d51f67344d5c3035",
+        "etag": null,
+        "last_modified": "Thu, 20 Jun 2024 18:19:46 GMT",
+        "content_length": "5072445",
+        "status": "downloaded"
+    },
+    "DME24-D": {
+        "year": "24",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/files/zip/dme24-d.zip",
+        "sha256": "351fce0268f5f220b152958210f442166700d04174bd6b3a0f5023799f520866",
+        "etag": null,
+        "last_modified": "Tue, 24 Sep 2024 13:47:36 GMT",
+        "content_length": "5087174",
+        "status": "downloaded"
+    },
+    "DME25-A": {
+        "year": "25",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/files/zip/dme25.zip",
+        "sha256": "e76c295967d01ad8dd13f657bc5bc74856e478e814a3b1d92cb1b629a20e3712",
+        "etag": null,
+        "last_modified": "Tue, 17 Dec 2024 13:35:42 GMT",
+        "content_length": "5133497",
+        "status": "downloaded"
+    },
+    "DME25-B": {
+        "year": "25",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/files/zip/dme25-b.zip",
+        "sha256": "012139d8d6be3df3a8c4ea045a1801bc5638d3d0e1f194f3a2a9abfb04aa1054",
+        "etag": null,
+        "last_modified": "Mon, 07 Apr 2025 16:26:17 GMT",
+        "content_length": "4992327",
+        "status": "downloaded"
+    },
+    "DME25-C": {
+        "year": "25",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/files/zip/dme25-c-updated-07/10/2025.zip",
+        "sha256": "a7e1bb0efa0889950ff274fab8916d391d6e43f3f8709f56701f3fe568c526c9",
+        "etag": null,
+        "last_modified": "Thu, 10 Jul 2025 19:56:50 GMT",
+        "content_length": "5029750",
+        "status": "downloaded"
+    },
+    "DME25-D": {
+        "year": "25",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/files/zip/dme25-d.zip",
+        "sha256": "51e94b5b6c55becd2ff9c074223a9227de6cefe1852cf78f2f9e179445d91bf2",
+        "etag": null,
+        "last_modified": "Wed, 10 Sep 2025 14:09:24 GMT",
+        "content_length": "4989898",
+        "status": "downloaded"
+    },
+    "DME26-A": {
+        "year": "26",
+        "quarter": "Q1",
+        "zip_url": "https://www.cms.gov/files/zip/dme26.zip",
+        "sha256": "0c833db83f78e39a81aa0e2072b6e5f76e898045897033f2249c3d8f854e2349",
+        "etag": null,
+        "last_modified": "Mon, 22 Dec 2025 19:30:44 GMT",
+        "content_length": "5136538",
+        "status": "downloaded"
+    },
+    "DME26-B": {
+        "year": "26",
+        "quarter": "Q2",
+        "zip_url": "https://www.cms.gov/files/zip/dme26-b.zip",
+        "sha256": "24fcdd90166e75b6dc1301407ffd9485dcda040d609ea1f262e60384ffd4cfa7",
+        "etag": null,
+        "last_modified": "Tue, 31 Mar 2026 14:58:54 GMT",
+        "content_length": "5105146",
+        "status": "downloaded"
+    },
+    "DME26-C": {
+        "year": "26",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/files/zip/dme26-c.zip",
+        "sha256": "78bcc2956f2e00f70fb4016bd44be470fb34ac1cc65b7321aa25e8dadb8be478",
+        "etag": null,
+        "last_modified": "Wed, 01 Jul 2026 17:06:50 GMT",
+        "content_length": "5085402",
+        "status": "downloaded"
+    },
+    "DME98-D": {
+        "year": "98",
+        "quarter": "Q4",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme98_d.zip",
+        "sha256": "feb91ddd3ec96ccc700f851cbd9335e6cc3683d614a8315eaf7526442c966ad3",
+        "status": "downloaded"
+    },
+    "DME99-C": {
+        "year": "99",
+        "quarter": "Q3",
+        "zip_url": "https://www.cms.gov/medicare/medicare-fee-for-service-payment/dmeposfeesched/downloads/dme99_c.zip",
+        "sha256": "f24af9a737022b5d954377f6a26098e07a29eb382b5e3a5c495177e2c40b4c25",
+        "status": "downloaded"
+    }
+}

@@ -1,15 +1,12 @@
-
 import sqlite3
 
 
 DATABASE_FILE = "cms_clfs.db"
-TABLE_NAME = "clfs_data"
 
 
-def main():
+def run_clfs_analysis(cursor):
 
-    connection = sqlite3.connect(DATABASE_FILE)
-    cursor = connection.cursor()
+    TABLE_NAME = "clfs_data"
 
     print()
     print("=" * 60)
@@ -38,9 +35,7 @@ def main():
 
     cursor.execute(
         f"""
-        SELECT
-            YEAR,
-            COUNT(*) AS RECORD_COUNT
+        SELECT YEAR, COUNT(*) AS RECORD_COUNT
         FROM {TABLE_NAME}
         GROUP BY YEAR
         ORDER BY CAST(YEAR AS INTEGER)
@@ -48,10 +43,7 @@ def main():
     )
 
     for year, count in cursor.fetchall():
-
-        print(
-            f"Year: {year} | Records: {count}"
-        )
+        print(f"Year: {year} | Records: {count}")
 
     # --------------------------------------------------
     # QUERY 3 - UNIQUE HCPCS CODES
@@ -68,11 +60,7 @@ def main():
         """
     )
 
-    unique_hcpcs = cursor.fetchone()[0]
-
-    print(
-        f"Unique HCPCS codes: {unique_hcpcs}"
-    )
+    print(f"Unique HCPCS codes: {cursor.fetchone()[0]}")
 
     # --------------------------------------------------
     # QUERY 4 - AVERAGE RATE BY YEAR
@@ -85,11 +73,9 @@ def main():
         SELECT
             YEAR,
             ROUND(
-                AVG(
-                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
-                ),
+                AVG(CAST(NULLIF(TRIM(RATE), '') AS REAL)),
                 2
-            ) AS AVERAGE_RATE
+            )
         FROM {TABLE_NAME}
         WHERE RATE IS NOT NULL
         AND TRIM(RATE) <> ''
@@ -99,11 +85,7 @@ def main():
     )
 
     for year, average_rate in cursor.fetchall():
-
-        print(
-            f"Year: {year} | "
-            f"Average Rate: {average_rate}"
-        )
+        print(f"Year: {year} | Average Rate: {average_rate}")
 
     # --------------------------------------------------
     # QUERY 5 - HIGHEST RATE BY YEAR
@@ -116,11 +98,9 @@ def main():
         SELECT
             YEAR,
             ROUND(
-                MAX(
-                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
-                ),
+                MAX(CAST(NULLIF(TRIM(RATE), '') AS REAL)),
                 2
-            ) AS MAX_RATE
+            )
         FROM {TABLE_NAME}
         WHERE RATE IS NOT NULL
         AND TRIM(RATE) <> ''
@@ -130,11 +110,7 @@ def main():
     )
 
     for year, max_rate in cursor.fetchall():
-
-        print(
-            f"Year: {year} | "
-            f"Highest Rate: {max_rate}"
-        )
+        print(f"Year: {year} | Highest Rate: {max_rate}")
 
     # --------------------------------------------------
     # QUERY 6 - LOWEST RATE BY YEAR
@@ -147,11 +123,9 @@ def main():
         SELECT
             YEAR,
             ROUND(
-                MIN(
-                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
-                ),
+                MIN(CAST(NULLIF(TRIM(RATE), '') AS REAL)),
                 2
-            ) AS MIN_RATE
+            )
         FROM {TABLE_NAME}
         WHERE RATE IS NOT NULL
         AND TRIM(RATE) <> ''
@@ -161,11 +135,7 @@ def main():
     )
 
     for year, min_rate in cursor.fetchall():
-
-        print(
-            f"Year: {year} | "
-            f"Lowest Rate: {min_rate}"
-        )
+        print(f"Year: {year} | Lowest Rate: {min_rate}")
 
     # --------------------------------------------------
     # QUERY 7 - TOP 10 HIGHEST HCPCS RATES
@@ -178,25 +148,22 @@ def main():
         SELECT
             HCPCS,
             ROUND(
-                MAX(
-                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
-                ),
+                MAX(CAST(NULLIF(TRIM(RATE), '') AS REAL)),
                 2
-            ) AS MAX_RATE,
-            MAX(SHORTDESC) AS DESCRIPTION
+            ),
+            MAX(SHORTDESC)
         FROM {TABLE_NAME}
         WHERE RATE IS NOT NULL
         AND TRIM(RATE) <> ''
         AND HCPCS IS NOT NULL
         AND TRIM(HCPCS) <> ''
         GROUP BY HCPCS
-        ORDER BY MAX_RATE DESC
+        ORDER BY 2 DESC
         LIMIT 10
         """
     )
 
     for hcpcs, rate, description in cursor.fetchall():
-
         print(
             f"HCPCS: {hcpcs} | "
             f"Rate: {rate} | "
@@ -214,25 +181,22 @@ def main():
         SELECT
             HCPCS,
             ROUND(
-                MIN(
-                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
-                ),
+                MIN(CAST(NULLIF(TRIM(RATE), '') AS REAL)),
                 2
-            ) AS MIN_RATE,
-            MIN(SHORTDESC) AS DESCRIPTION
+            ),
+            MIN(SHORTDESC)
         FROM {TABLE_NAME}
         WHERE RATE IS NOT NULL
         AND TRIM(RATE) <> ''
         AND HCPCS IS NOT NULL
         AND TRIM(HCPCS) <> ''
         GROUP BY HCPCS
-        ORDER BY MIN_RATE ASC
+        ORDER BY 2 ASC
         LIMIT 10
         """
     )
 
     for hcpcs, rate, description in cursor.fetchall():
-
         print(
             f"HCPCS: {hcpcs} | "
             f"Rate: {rate} | "
@@ -247,9 +211,7 @@ def main():
 
     cursor.execute(
         f"""
-        SELECT
-            SOURCE_FILE,
-            COUNT(*) AS RECORD_COUNT
+        SELECT SOURCE_FILE, COUNT(*)
         FROM {TABLE_NAME}
         GROUP BY SOURCE_FILE
         ORDER BY SOURCE_FILE
@@ -257,10 +219,7 @@ def main():
     )
 
     for source, count in cursor.fetchall():
-
-        print(
-            f"{source} | Records: {count}"
-        )
+        print(f"{source} | Records: {count}")
 
     # --------------------------------------------------
     # QUERY 10 - HCPCS RATE HISTORY
@@ -270,9 +229,7 @@ def main():
 
     search_code = "0002M"
 
-    print(
-        f"Searching for HCPCS: {search_code}"
-    )
+    print(f"Searching for HCPCS: {search_code}")
 
     cursor.execute(
         f"""
@@ -280,35 +237,22 @@ def main():
             YEAR,
             HCPCS,
             EFF_DATE,
-            CAST(NULLIF(TRIM(RATE), '') AS REAL) AS RATE,
+            CAST(NULLIF(TRIM(RATE), '') AS REAL),
             SHORTDESC
         FROM {TABLE_NAME}
         WHERE HCPCS = ?
-        ORDER BY
-            CAST(YEAR AS INTEGER),
-            EFF_DATE
+        ORDER BY CAST(YEAR AS INTEGER), EFF_DATE
         """,
         (search_code,)
     )
 
-    rows = cursor.fetchall()
-
-    if rows:
-
-        for row in rows:
-
-            print(
-                f"Year: {row[0]} | "
-                f"HCPCS: {row[1]} | "
-                f"Effective Date: {row[2]} | "
-                f"Rate: {row[3]} | "
-                f"Description: {row[4]}"
-            )
-
-    else:
-
+    for row in cursor.fetchall():
         print(
-            f"No records found for {search_code}"
+            f"Year: {row[0]} | "
+            f"HCPCS: {row[1]} | "
+            f"Effective Date: {row[2]} | "
+            f"Rate: {row[3]} | "
+            f"Description: {row[4]}"
         )
 
     # --------------------------------------------------
@@ -319,24 +263,18 @@ def main():
 
     cursor.execute(
         f"""
-        SELECT
-            HCPCS,
-            COUNT(*) AS RECORD_COUNT
+        SELECT HCPCS, COUNT(*)
         FROM {TABLE_NAME}
         WHERE HCPCS IS NOT NULL
         AND TRIM(HCPCS) <> ''
         GROUP BY HCPCS
-        ORDER BY RECORD_COUNT DESC, HCPCS
+        ORDER BY 2 DESC, HCPCS
         LIMIT 10
         """
     )
 
     for hcpcs, count in cursor.fetchall():
-
-        print(
-            f"HCPCS: {hcpcs} | "
-            f"Records: {count}"
-        )
+        print(f"HCPCS: {hcpcs} | Records: {count}")
 
     # --------------------------------------------------
     # QUERY 12 - HCPCS AVAILABLE ACROSS ALL 9 YEARS
@@ -346,9 +284,7 @@ def main():
 
     cursor.execute(
         f"""
-        SELECT
-            HCPCS,
-            COUNT(DISTINCT YEAR) AS YEAR_COUNT
+        SELECT HCPCS, COUNT(DISTINCT YEAR)
         FROM {TABLE_NAME}
         WHERE HCPCS IS NOT NULL
         AND TRIM(HCPCS) <> ''
@@ -360,11 +296,7 @@ def main():
     )
 
     for hcpcs, year_count in cursor.fetchall():
-
-        print(
-            f"HCPCS: {hcpcs} | "
-            f"Years represented: {year_count}"
-        )
+        print(f"HCPCS: {hcpcs} | Years represented: {year_count}")
 
     # --------------------------------------------------
     # QUERY 13 - NUMBER OF SOURCE FILES
@@ -381,11 +313,7 @@ def main():
         """
     )
 
-    source_count = cursor.fetchone()[0]
-
-    print(
-        f"Source files represented: {source_count}"
-    )
+    print(f"Source files represented: {cursor.fetchone()[0]}")
 
     # --------------------------------------------------
     # QUERY 14 - RECORDS BY INDICATOR
@@ -396,20 +324,16 @@ def main():
     cursor.execute(
         f"""
         SELECT
-            COALESCE(INDICATOR, 'None') AS INDICATOR_VALUE,
-            COUNT(*) AS RECORD_COUNT
+            COALESCE(INDICATOR, 'None'),
+            COUNT(*)
         FROM {TABLE_NAME}
         GROUP BY INDICATOR
-        ORDER BY RECORD_COUNT DESC
+        ORDER BY 2 DESC
         """
     )
 
     for indicator, count in cursor.fetchall():
-
-        print(
-            f"Indicator: {indicator} | "
-            f"Records: {count}"
-        )
+        print(f"Indicator: {indicator} | Records: {count}")
 
     # --------------------------------------------------
     # QUERY 15 - OVERALL RATE SUMMARY
@@ -420,24 +344,9 @@ def main():
     cursor.execute(
         f"""
         SELECT
-            ROUND(
-                MIN(
-                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
-                ),
-                2
-            ),
-            ROUND(
-                MAX(
-                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
-                ),
-                2
-            ),
-            ROUND(
-                AVG(
-                    CAST(NULLIF(TRIM(RATE), '') AS REAL)
-                ),
-                2
-            )
+            ROUND(MIN(CAST(NULLIF(TRIM(RATE), '') AS REAL)), 2),
+            ROUND(MAX(CAST(NULLIF(TRIM(RATE), '') AS REAL)), 2),
+            ROUND(AVG(CAST(NULLIF(TRIM(RATE), '') AS REAL)), 2)
         FROM {TABLE_NAME}
         WHERE RATE IS NOT NULL
         AND TRIM(RATE) <> ''
@@ -450,11 +359,357 @@ def main():
     print(f"Maximum Rate: {maximum}")
     print(f"Average Rate: {average}")
 
+
+def run_dme_analysis(cursor):
+
+    print()
+    print("=" * 60)
+    print("CMS DME SQL ANALYSIS")
+    print("=" * 60)
+
     # --------------------------------------------------
-    # CLOSE DATABASE
+    # DME QUERY 1 - MAIN DME RECORDS
     # --------------------------------------------------
 
-    connection.close()
+    print("\n1. TOTAL DMEPOS RECORDS")
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM dme_fee_schedule
+        """
+    )
+
+    print(f"Total DMEPOS records: {cursor.fetchone()[0]}")
+
+    # --------------------------------------------------
+    # DME QUERY 2 - RECORDS BY YEAR
+    # --------------------------------------------------
+
+    print("\n2. DMEPOS RECORDS BY YEAR")
+
+    cursor.execute(
+        """
+        SELECT fee_year, COUNT(*)
+        FROM dme_fee_schedule
+        GROUP BY fee_year
+        ORDER BY fee_year
+        """
+    )
+
+    for year, count in cursor.fetchall():
+        print(f"Year: {year} | Records: {count}")
+
+    # --------------------------------------------------
+    # DME QUERY 3 - RECORDS BY QUARTER
+    # --------------------------------------------------
+
+    print("\n3. DMEPOS RECORDS BY QUARTER")
+
+    cursor.execute(
+        """
+        SELECT
+            fee_year,
+            quarter,
+            COUNT(*)
+        FROM dme_fee_schedule
+        GROUP BY fee_year, quarter
+        ORDER BY fee_year, quarter
+        """
+    )
+
+    for year, quarter, count in cursor.fetchall():
+        print(
+            f"Year: {year} | "
+            f"Quarter: {quarter} | "
+            f"Records: {count}"
+        )
+
+    # --------------------------------------------------
+    # DME QUERY 4 - UNIQUE HCPCS
+    # --------------------------------------------------
+
+    print("\n4. UNIQUE DME HCPCS CODES")
+
+    cursor.execute(
+        """
+        SELECT COUNT(DISTINCT hcpcs)
+        FROM dme_fee_schedule
+        WHERE hcpcs IS NOT NULL
+        AND TRIM(hcpcs) <> ''
+        """
+    )
+
+    print(f"Unique DME HCPCS codes: {cursor.fetchone()[0]}")
+
+    # --------------------------------------------------
+    # DME QUERY 5 - RECORDS BY RELEASE
+    # --------------------------------------------------
+
+    print("\n5. RECORDS BY DME RELEASE")
+
+    cursor.execute(
+        """
+        SELECT
+            release,
+            COUNT(*)
+        FROM dme_fee_schedule
+        GROUP BY release
+        ORDER BY release
+        """
+    )
+
+    for release, count in cursor.fetchall():
+        print(f"{release} | Records: {count}")
+
+    # --------------------------------------------------
+    # DME QUERY 6 - HIGHEST CEILING
+    # --------------------------------------------------
+
+    print("\n6. TOP 10 HIGHEST DME CEILING PRICES")
+
+    cursor.execute(
+        """
+        SELECT
+            hcpcs,
+            ceiling,
+            description
+        FROM dme_fee_schedule
+        WHERE ceiling IS NOT NULL
+        AND TRIM(ceiling) <> ''
+        ORDER BY CAST(ceiling AS REAL) DESC
+        LIMIT 10
+        """
+    )
+
+    for hcpcs, ceiling, description in cursor.fetchall():
+        print(
+            f"HCPCS: {hcpcs} | "
+            f"Ceiling: {ceiling} | "
+            f"Description: {description}"
+        )
+
+    # --------------------------------------------------
+    # DME QUERY 7 - LOWEST FLOOR
+    # --------------------------------------------------
+
+    print("\n7. LOWEST DME FLOOR PRICES")
+
+    cursor.execute(
+        """
+        SELECT
+            hcpcs,
+            floor,
+            description
+        FROM dme_fee_schedule
+        WHERE floor IS NOT NULL
+        AND TRIM(floor) <> ''
+        ORDER BY CAST(floor AS REAL) ASC
+        LIMIT 10
+        """
+    )
+
+    for hcpcs, floor, description in cursor.fetchall():
+        print(
+            f"HCPCS: {hcpcs} | "
+            f"Floor: {floor} | "
+            f"Description: {description}"
+        )
+
+    # --------------------------------------------------
+    # DME QUERY 8 - STATE PRICING
+    # --------------------------------------------------
+
+    print("\n8. DME STATE PRICING SUMMARY")
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM dme_state_pricing
+        """
+    )
+
+    print(
+        f"State pricing records: {cursor.fetchone()[0]}"
+    )
+
+    # --------------------------------------------------
+    # DME QUERY 9 - NR VS R
+    # --------------------------------------------------
+
+    print("\n9. NON-RURAL VS RURAL PRICING")
+
+    cursor.execute(
+        """
+        SELECT
+            pricing_type,
+            COUNT(*)
+        FROM dme_state_pricing
+        GROUP BY pricing_type
+        ORDER BY pricing_type
+        """
+    )
+
+    for pricing_type, count in cursor.fetchall():
+        print(
+            f"Pricing type: {pricing_type} | "
+            f"Records: {count}"
+        )
+
+    # --------------------------------------------------
+    # DME QUERY 10 - STATE DISTRIBUTION
+    # --------------------------------------------------
+
+    print("\n10. STATE PRICING DISTRIBUTION")
+
+    cursor.execute(
+        """
+        SELECT
+            state,
+            COUNT(*)
+        FROM dme_state_pricing
+        GROUP BY state
+        ORDER BY state
+        """
+    )
+
+    for state, count in cursor.fetchall():
+        print(f"State: {state} | Records: {count}")
+
+    # --------------------------------------------------
+    # DME QUERY 11 - DMEPEN
+    # --------------------------------------------------
+
+    print("\n11. DMEPEN SUMMARY")
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM dme_pen_schedule
+        """
+    )
+
+    print(f"DMEPEN records: {cursor.fetchone()[0]}")
+
+    cursor.execute(
+        """
+        SELECT
+            fee_year,
+            quarter,
+            COUNT(*)
+        FROM dme_pen_schedule
+        GROUP BY fee_year, quarter
+        ORDER BY fee_year, quarter
+        """
+    )
+
+    for year, quarter, count in cursor.fetchall():
+        print(
+            f"Year: {year} | "
+            f"Quarter: {quarter} | "
+            f"Records: {count}"
+        )
+
+    # --------------------------------------------------
+    # DME QUERY 12 - FORMER CBA
+    # --------------------------------------------------
+
+    print("\n12. FORMER CBA PRICING SUMMARY")
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM dme_former_cba_pricing
+        """
+    )
+
+    print(
+        f"Former CBA pricing records: {cursor.fetchone()[0]}"
+    )
+
+    cursor.execute(
+        """
+        SELECT COUNT(DISTINCT cba_name)
+        FROM dme_former_cba_pricing
+        """
+    )
+
+    print(
+        f"Unique CBA/location values: {cursor.fetchone()[0]}"
+    )
+
+    # --------------------------------------------------
+    # DME QUERY 13 - RURAL ZIP
+    # --------------------------------------------------
+
+    print("\n13. RURAL ZIP SUMMARY")
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM dme_rural_zip
+        """
+    )
+
+    print(
+        f"Rural ZIP records: {cursor.fetchone()[0]}"
+    )
+
+    # --------------------------------------------------
+    # DME QUERY 14 - FORMER CBA ZIP
+    # --------------------------------------------------
+
+    print("\n14. FORMER CBA ZIP SUMMARY")
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM dme_former_cba_zip
+        """
+    )
+
+    print(
+        f"Former CBA ZIP records: {cursor.fetchone()[0]}"
+    )
+
+    # --------------------------------------------------
+    # DME QUERY 15 - MAIL ORDER DTS
+    # --------------------------------------------------
+
+    print("\n15. NATIONAL MAIL-ORDER DTS")
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM dme_mail_order_dts
+        """
+    )
+
+    print(
+        f"Mail-order DTS records: {cursor.fetchone()[0]}"
+    )
+
+    print()
+    print("=" * 60)
+    print("DME SQL ANALYSIS COMPLETED")
+    print("=" * 60)
+
+
+def main():
+
+    connection = sqlite3.connect(DATABASE_FILE)
+
+    try:
+
+        cursor = connection.cursor()
+
+        run_clfs_analysis(cursor)
+
+        run_dme_analysis(cursor)
+
+    finally:
+
+        connection.close()
 
     print()
     print("=" * 60)
@@ -462,10 +717,5 @@ def main():
     print("=" * 60)
 
 
-# --------------------------------------------------
-# RUN
-# --------------------------------------------------
-
 if __name__ == "__main__":
     main()
-
