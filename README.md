@@ -1,66 +1,79 @@
+@"
 # CMS CLFS Automated Data Pipeline
 
 ## Project Overview
 
-The **CMS CLFS Automated Data Pipeline** is a Python-based data engineering project that automatically downloads CMS (Centers for Medicare & Medicaid Services) healthcare pricing data, processes and cleans the data, combines Clinical Laboratory Fee Schedule (CLFS) data with Physician Fee Schedule data, stores the final dataset in a SQLite database, and performs SQL-based analysis.
+The **CMS CLFS Automated Data Pipeline** is a Python-based end-to-end ETL and data automation project for processing healthcare pricing data published by the **Centers for Medicare & Medicaid Services (CMS)**.
 
-The project is designed as an automated end-to-end ETL pipeline.
+The pipeline automatically:
+
+- Checks CMS for new or updated CLFS files
+- Detects file versions
+- Tracks previously processed versions
+- Detects record-level changes
+- Downloads and extracts CMS files
+- Processes Clinical Laboratory Fee Schedule (CLFS) data
+- Processes Physician Fee Schedule data
+- Processes Anesthesia Conversion Factor data
+- Cleans and standardizes the datasets
+- Combines datasets into a unified dataset
+- Stores the processed data in SQLite
+- Performs SQL-based analysis
+- Runs the complete workflow through a single pipeline
 
 ---
 
 ## Project Objective
 
-The main objectives of this project are:
+The primary objective is to automate the collection, processing, validation, storage, and analysis of CMS healthcare pricing data.
 
-- Automatically download CMS data files.
-- Extract and process Clinical Laboratory Fee Schedule (CLFS) data.
-- Process Physician Fee Schedule data.
-- Clean and standardize the datasets.
-- Combine Clinical and Physician datasets into one unified dataset.
-- Store the combined data in a SQLite database.
-- Perform SQL analysis on the processed data.
-- Generate useful statistics such as record counts, average rates, HCPCS rate history, and highest/lowest rates.
-- Automate the complete workflow using a single Python script.
+The project reduces manual work by automatically identifying whether CMS has published a new file or version and processing the updated data through the ETL pipeline.
 
 ---
 
-# Technologies Used
-
-- **Python**
-- **Pandas**
-- **SQLite**
-- **SQL**
-- **Requests**
-- **BeautifulSoup**
-- **Pathlib**
-- **Subprocess**
-- **CMS public data files**
-- **CSV**
-- **ZIP files**
-
----
-
-# Project Structure
+# Pipeline Architecture
 
 ```text
-CMS_CLFS_Automated_Project 2/
-│
-├── download_files.py
-├── etl_pipeline.py
-├── physician_parser.py
-├── combine_datasets.py
-├── database.py
-├── sql_queries.py
-├── run_pipeline.py
-│
-├── cms_clfs.db
-│
-├── downloads/
-│   ├── 2024/
-│   ├── 2025/
-│   └── 2026/
-│
-└── output/
-    ├── cms_clfs_combined.csv
-    ├── cms_physician_combined.csv
-    └── cms_all_combined.csv
+                    CMS Website
+                         |
+                         v
+              Version Detection
+                         |
+                         v
+              Version Tracker
+                         |
+              +----------+----------+
+              |                     |
+         UNCHANGED             NEW VERSION
+              |                     |
+              |                     v
+              |              Download File
+              |                     |
+              +----------+----------+
+                         |
+                         v
+                 Change Detection
+                         |
+              +----------+----------+
+              |          |          |
+            Added     Modified    Removed
+              |          |          |
+              +----------+----------+
+                         |
+                         v
+                    ETL Process
+                         |
+          +--------------+--------------+
+          |              |              |
+        CLFS         Physician      Anesthesia
+          |              |              |
+          +--------------+--------------+
+                         |
+                         v
+                 Dataset Combination
+                         |
+                         v
+                  SQLite Database
+                         |
+                         v
+                    SQL Analysis

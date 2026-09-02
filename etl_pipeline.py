@@ -274,25 +274,27 @@ def read_cms_csv(csv_file):
 # --------------------------------------------------
 # FIND ALL CSV FILES
 # --------------------------------------------------
-
 def find_csv_files():
 
     csv_files = sorted(
-        DOWNLOADS_FOLDER.rglob("*.csv")
+        file
+        for file in DOWNLOADS_FOLDER.rglob("*.csv")
+        if "anesthesia" not in {
+            part.lower()
+            for part in file.parts
+        }
     )
 
     print(
-        f"\n[INFO] CSV files found: {len(csv_files)}"
+        f"\n[INFO] CLFS CSV files found: {len(csv_files)}"
     )
 
     for csv_file in csv_files:
-
         print(
             f"  - {csv_file}"
         )
 
     return csv_files
-
 
 # --------------------------------------------------
 # MAIN ETL PIPELINE

@@ -48,7 +48,7 @@ def main():
     print()
 
     # --------------------------------------------------
-    # STEP 1 - DOWNLOAD AND EXTRACT CMS FILES
+    # STEP 1 - DOWNLOAD AND EXTRACT CMS CLFS FILES
     # --------------------------------------------------
 
     run_script("download_files.py")
@@ -72,13 +72,31 @@ def main():
     run_script("combine_datasets.py")
 
     # --------------------------------------------------
-    # STEP 5 - LOAD DATA INTO SQLITE DATABASE
+    # STEP 5 - LOAD CLFS + PHYSICIAN DATA INTO DATABASE
     # --------------------------------------------------
 
     run_script("database.py")
 
     # --------------------------------------------------
-    # STEP 6 - RUN SQL ANALYSIS
+    # STEP 6 - DOWNLOAD ANESTHESIA FILES
+    # --------------------------------------------------
+
+    run_script("anesthesia_downloader.py")
+
+    # --------------------------------------------------
+    # STEP 7 - PARSE 3 YEARS OF ANESTHESIA DATA
+    # --------------------------------------------------
+
+    run_script("anesthesia_parser.py")
+
+    # --------------------------------------------------
+    # STEP 8 - LOAD ANESTHESIA DATA INTO DATABASE
+    # --------------------------------------------------
+
+    run_script("anesthesia_database.py")
+
+    # --------------------------------------------------
+    # STEP 9 - RUN SQL ANALYSIS
     # --------------------------------------------------
 
     run_script("sql_queries.py")
@@ -94,10 +112,18 @@ def main():
 
     print()
     print("Generated outputs:")
+
     print("  - output/cms_clfs_combined.csv")
     print("  - output/cms_physician_combined.csv")
     print("  - output/cms_all_combined.csv")
+    print("  - output/anesthesia_3year_clean.csv")
     print("  - cms_clfs.db")
+
+    print()
+    print("Database tables:")
+
+    print("  - clfs_data")
+    print("  - anesthesia_data")
 
     print()
     print("All pipeline stages completed successfully.")
