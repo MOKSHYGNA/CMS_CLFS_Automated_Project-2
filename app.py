@@ -22,8 +22,8 @@ st.set_page_config(
 # Project 2 = folder where this app.py is located
 PROJECT_2 = Path(__file__).resolve().parent
 
-# DMEPOS Project 3 is expected to be next to Project 2
-DMEPOS_PROJECT = PROJECT_2.parent / "CMS_DMEPOS_Automated_Project 3"
+# DMEPOS Project 3 is inside Project 2
+DMEPOS_PROJECT = PROJECT_2 / "CMS_DMEPOS_Automated_Project 3"
 DMEPOS_PIPELINE = DMEPOS_PROJECT / "run_pipeline.py"
 
 
