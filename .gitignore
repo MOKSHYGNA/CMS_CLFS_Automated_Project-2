@@ -3,3 +3,6 @@ __pycache__/
 downloads/
 output/
 *.db
+
+dme_downloads/
+app_backup.py
